@@ -11,10 +11,15 @@ export default class Ticket extends BaseEntity {
   @JoinColumn({ name: "userId" })
   user: User;
 
-  @ManyToOne(() => TypeTicket, (type) => type.ticket)
+  @ManyToOne(() => TypeTicket, (type) => type.ticket, { eager: true })
   @JoinColumn({ name: "typeId" })
   type: TypeTicket;
 
   @Column({ type: "boolean", default: false })
   isPaid: boolean;
+
+  static async getTicket(userId: number) {
+    const ticket = await this.findOne({ where: { userId } });
+    return ticket;
+  }
 }
