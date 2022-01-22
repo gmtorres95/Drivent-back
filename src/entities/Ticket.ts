@@ -17,5 +17,12 @@ export default class Ticket extends BaseEntity {
 
   @Column({ type: "boolean", default: false })
   isPaid: boolean;
+
+  static async updateTicketPayment(ticket: Ticket) {
+    ticket.isPaid = true;
+    const ticketPaid = this.create(ticket);
+    await ticketPaid.save();
+    return ticketPaid;
+  }
 }
 
