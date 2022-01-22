@@ -1,6 +1,7 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn } from "typeorm";
 import TypeTicket from "./TypeTicket";
 import User from "./User";
+import Room from "./Room";
 
 @Entity("tickets")
 export default class Ticket extends BaseEntity {
@@ -17,6 +18,13 @@ export default class Ticket extends BaseEntity {
 
   @Column({ type: "boolean", default: false })
   isPaid: boolean;
+
+  @Column({ nullable: true })
+  roomId: number;
+
+  @ManyToOne(() => Room, (room: Room) => room.tickets)
+  @JoinColumn()
+  room: Room;
 
   static async updateTicketPayment(ticket: Ticket) {
     ticket.isPaid = true;
