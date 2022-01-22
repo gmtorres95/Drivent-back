@@ -17,9 +17,5 @@ export default class Ticket extends BaseEntity {
 
   @Column({ type: "boolean", default: false })
   isPaid: boolean;
-
-  static async getTicket(userId: number) {
-    const ticket = await this.findOne({ where: { userId } });
-    return ticket;
-  }
 }
+
