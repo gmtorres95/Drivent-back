@@ -1,0 +1,13 @@
+seeds:
+    - RoomType:
+        id: 1
+        type: "Single"
+        bedsQuantity: 1
+    - RoomType:
+        id: 2
+        type: "Double"
+        bedsQuantity: 2
+    - RoomType:
+        id: 3
+        type: "Triple"
+        bedsQuantity: 3

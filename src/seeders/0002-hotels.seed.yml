@@ -1,0 +1,16 @@
+seeds:
+    - Hotel:
+        id: 1
+        image: "https://media-cdn.tripadvisor.com/media/photo-s/16/1a/ea/54/hotel-presidente-4s.jpg"
+        name: "Driven Resort"
+        totalOfBeds: 20
+    - Hotel:
+        id: 2
+        image: "https://www.ahstatic.com/photos/5451_ho_00_p_1024x768.jpg"
+        name: "Driven Palace"
+        totalOfBeds: 25
+    - Hotel:
+        id: 3
+        image: "https://imgcy.trivago.com/c_lfill,d_dummy.jpeg,e_sharpen:60,f_auto,h_450,q_auto,w_450/itemimages/96/95/96959_v6.jpeg"
+        name: "Driven World"
+        totalOfBeds: 5
