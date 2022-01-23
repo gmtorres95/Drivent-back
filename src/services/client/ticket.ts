@@ -1,5 +1,9 @@
 import Ticket from "@/entities/Ticket";
 
+export async function postTicket(ticket: Ticket) {
+  await Ticket.postTicket(ticket);
+}
+
 export async function getTicketByUser(userId: number) {
   return await Ticket.getByUserId(userId);
 }

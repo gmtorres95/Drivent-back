@@ -11,9 +11,12 @@ export default class Ticket extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => User)
-  @JoinColumn({ name: "userId" })
-  user: User;
+  // @OneToOne(() => User)
+  // @JoinColumn({ name: "userId" })
+  // user: User;
+
+  @Column({ name: "userId" })
+  user: number;
 
   @ManyToOne(() => TypeTicket, (type) => type.ticket, { eager: true })
   @JoinColumn({ name: "typeId" })
@@ -28,6 +31,12 @@ export default class Ticket extends BaseEntity {
   @ManyToOne(() => Room, (room: Room) => room.tickets)
   @JoinColumn()
   room: Room;
+
+  static async postTicket(ticket: Ticket) {
+    console.log(ticket);
+    const ticketCreated = this.create(ticket);
+    await this.save(ticketCreated);
+  }
 
   static async getByUserId(userId: number) {
     return await this.findOne({ where: { user: userId } });
