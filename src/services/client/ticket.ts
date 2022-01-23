@@ -1,14 +1,9 @@
 import Ticket from "@/entities/Ticket";
 
 export async function getTicketByUser(userId: number) {
-  const ticket = await Ticket.findOne({ where: { user: userId } });
-
-  return ticket;
+  return await Ticket.getByUserId(userId);
 }
 
-export async function updateTicket(userId: number) {
-  const ticket = await getTicketByUser(userId);
-  const tickedPaid = await Ticket.updateTicketPayment(ticket);
-
-  return tickedPaid;
+export async function updateTicketPayment(userId: number) {
+  return await Ticket.updateTicketPayment(userId);
 }

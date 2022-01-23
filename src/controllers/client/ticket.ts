@@ -8,8 +8,8 @@ export async function getTicketByUser(req: Request, res: Response) {
   res.send(ticket);
 }
 
-export async function updateTicket(req: Request, res: Response) {
+export async function updateTicketPayment(req: Request, res: Response) {
   const userId = req.user.id;
-  const tickedPaid = await service.updateTicket(userId);
+  const tickedPaid = await service.updateTicketPayment(userId);
   res.send(tickedPaid);
 }
