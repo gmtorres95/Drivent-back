@@ -16,7 +16,6 @@ app.use(express.json());
 app.get("/health", (_req, res) => {
   res.send("OK!");
 });
-
 app.use(router);
 app.use(errorHandlingMiddleware);
 
