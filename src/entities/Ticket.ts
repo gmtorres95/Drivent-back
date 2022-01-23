@@ -1,6 +1,5 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn } from "typeorm";
 import TypeTicket from "./TypeTicket";
-import User from "./User";
 import Room from "./Room";
 import NotFoundError from "@/errors/NotFoundError";
 import RoomNotFound from "@/errors/RoomNotFound";
@@ -33,7 +32,6 @@ export default class Ticket extends BaseEntity {
   room: Room;
 
   static async postTicket(ticket: Ticket) {
-    console.log(ticket);
     const ticketCreated = this.create(ticket);
     await this.save(ticketCreated);
   }
