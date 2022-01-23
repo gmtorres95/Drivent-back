@@ -38,6 +38,6 @@ export default class Room extends BaseEntity {
   }
 
   static async getListByHotelId(hotelId: number) {
-    return await this.find({ where: { hotelId } });
+    return await this.find({ where: { hotelId }, relations: ["tickets"], order: { number: "ASC" } });
   }
 }
