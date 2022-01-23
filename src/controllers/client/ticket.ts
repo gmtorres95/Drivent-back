@@ -13,3 +13,10 @@ export async function updateTicketPayment(req: Request, res: Response) {
   const tickedPaid = await service.updateTicketPayment(userId);
   res.send(tickedPaid);
 }
+
+export async function updateTicketBooking(req: Request, res: Response) {
+  const userId = req.user.id;
+  const roomId = +req.params.roomId;
+  const bookedTicket = await service.updateTicketBooking(userId, roomId);
+  res.send(bookedTicket);
+}

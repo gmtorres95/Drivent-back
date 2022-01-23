@@ -30,11 +30,11 @@ export default class Ticket extends BaseEntity {
   room: Room;
 
   static async getByUserId(userId: number) {
-    return await this.findOne({ where: { userId } });
+    return await this.findOne({ where: { id: userId } });
   }
 
   static async updateTicketPayment(userId: number) {
-    const ticket = await this.findOne({ where: { userId } });
+    const ticket = await this.findOne({ where: { id: userId } });
 
     if(!ticket) throw new NotFoundError;
 
@@ -45,7 +45,7 @@ export default class Ticket extends BaseEntity {
   }
 
   static async updateTicketBooking(userId: number, roomId: number) {
-    const ticket = await this.findOne({ where: { userId } });
+    const ticket = await this.findOne({ where: { id: userId } });
     if(!ticket) throw new NotFoundError;
     if(!ticket.isPaid) throw new CannotBookBeforePayment;
 

@@ -7,3 +7,7 @@ export async function getTicketByUser(userId: number) {
 export async function updateTicketPayment(userId: number) {
   return await Ticket.updateTicketPayment(userId);
 }
+
+export async function updateTicketBooking(userId: number, roomId: number) {
+  return await Ticket.updateTicketBooking(userId, roomId);
+}

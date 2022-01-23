@@ -27,6 +27,18 @@ export default function errorHandlingMiddleware (err: Error, _req: Request, res:
     });
   }
 
+  if (err instanceof CannotBookBeforePayment) {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: err.message
+    });
+  }
+
+  if (err instanceof RoomNotFound) {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: err.message
+    });
+  }
+
   if (err instanceof InvalidDataError) {
     return res.status(httpStatus.UNPROCESSABLE_ENTITY).send({
       message: err.message,
@@ -48,18 +60,6 @@ export default function errorHandlingMiddleware (err: Error, _req: Request, res:
   
   if (err instanceof NotFoundError) {
     return res.status(httpStatus.NOT_FOUND).send({
-      message: err.message
-    });
-  }
-
-  if (err instanceof CannotBookBeforePayment) {
-    return res.status(httpStatus.BAD_REQUEST).send({
-      message: err.message
-    });
-  }
-
-  if (err instanceof RoomNotFound) {
-    return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message
     });
   }
