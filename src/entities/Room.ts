@@ -25,7 +25,7 @@ export default class Room extends BaseEntity {
   @JoinColumn()
   roomType: RoomType;
 
-  @OneToMany(() => Ticket, (ticket: Ticket) => ticket.room)
+  @OneToMany(() => Ticket, (ticket: Ticket) => ticket.room, { eager: true })
   tickets: Ticket[];
 
   getRoom() {
@@ -38,6 +38,6 @@ export default class Room extends BaseEntity {
   }
 
   static async getListByHotelId(hotelId: number) {
-    return await this.find({ where: { hotelId }, relations: ["tickets"], order: { number: "ASC" } });
+    return await this.find({ where: { hotelId }, order: { number: "ASC" } });
   }
 }
