@@ -29,8 +29,25 @@ export default class Ticket extends BaseEntity {
   @JoinColumn()
   room: Room;
 
+  getAllTicketData() {
+    return {
+      id: this.id,
+      isPaid: this.isPaid,
+      type: this.type,
+      room: 
+      { 
+        id: this.roomId,
+        number: this.room.number,
+        bookings: this.room.tickets.length,
+        roomType: this.room.roomType.type,
+        hotel: this.room.hotel
+      },
+
+    };
+  }
+
   static async getByUserId(userId: number) {
-    return await this.findOne({ where: { user: userId } });
+    return await this.findOne({ relations: ["room"], where: { user: userId } });
   }
 
   static async updateTicketPayment(userId: number) {
