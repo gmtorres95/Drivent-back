@@ -6,7 +6,7 @@ import Ticket from "@/entities/Ticket";
 
 export async function createTicket(req: Request, res: Response) {
   const ticketBody: Ticket = req.body;
-  ticketBody.user = req.user.id;  
+  ticketBody.userId = req.user.id;  
   await service.postTicket(ticketBody);
   res.sendStatus(httpStatus.CREATED);
 }

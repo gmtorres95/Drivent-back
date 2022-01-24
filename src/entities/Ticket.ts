@@ -4,18 +4,15 @@ import Room from "./Room";
 import NotFoundError from "@/errors/NotFoundError";
 import RoomNotFound from "@/errors/RoomNotFound";
 import CannotBookBeforePayment from "@/errors/CannotBookBeforePayment";
+import User from "./User";
 
 @Entity("tickets")
 export default class Ticket extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // @OneToOne(() => User)
-  // @JoinColumn({ name: "userId" })
-  // user: User;
-
   @Column({ name: "userId" })
-  user: number;
+  userId: number;
 
   @ManyToOne(() => TypeTicket, (type) => type.ticket, { eager: true })
   @JoinColumn({ name: "typeId" })
@@ -27,6 +24,10 @@ export default class Ticket extends BaseEntity {
   @Column({ nullable: true })
   roomId: number;
 
+  @OneToOne(() => User)
+  @JoinColumn({ name: "userId" })
+  user: User;
+
   @ManyToOne(() => Room, (room: Room) => room.tickets)
   @JoinColumn()
   room: Room;
@@ -37,11 +38,11 @@ export default class Ticket extends BaseEntity {
   }
 
   static async getByUserId(userId: number) {
-    return await this.findOne({ where: { user: userId } });
+    return await this.findOne({ where: { userId } });
   }
 
   static async updateTicketPayment(userId: number) {
-    const ticket = await this.findOne({ where: { user: userId } });
+    const ticket = await this.findOne({ where: { userId } });
 
     if(!ticket) throw new NotFoundError;
 
@@ -52,7 +53,7 @@ export default class Ticket extends BaseEntity {
   }
 
   static async updateTicketBooking(userId: number, roomId: number) {
-    const ticket = await this.findOne({ where: { user: userId } });
+    const ticket = await this.findOne({ where: { userId } });
     if(!ticket) throw new NotFoundError;
     if(!ticket.isPaid) throw new CannotBookBeforePayment;
 
