@@ -6,7 +6,7 @@ export async function postTicket(ticket: Ticket) {
 
 export async function getTicketByUser(userId: number) {
   const ticket = await Ticket.getByUserId(userId);
-  return ticket.getAllTicketData();
+  return ticket?.getAllTicketData();
 }
 
 export async function updateTicketPayment(userId: number) {
