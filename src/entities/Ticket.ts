@@ -34,7 +34,6 @@ export default class Ticket extends BaseEntity {
   @JoinColumn()
   room: Room;
 
-
   getAllTicketData() {
     return {
       id: this.id,
@@ -55,6 +54,7 @@ export default class Ticket extends BaseEntity {
   static async getByUserId(userId: number) {
     return await this.findOne({ relations: ["room"], where: { user: userId } });
   }
+
   static async postTicket(ticket: Ticket) {
     const existentTicket = await this.getByUserId(ticket.userId);
     if(existentTicket) throw new UserAlreadyWithTicket;
