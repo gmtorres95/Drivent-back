@@ -1,7 +1,12 @@
 import Ticket from "@/entities/Ticket";
 
+export async function postTicket(ticket: Ticket) {
+  await Ticket.postTicket(ticket);
+}
+
 export async function getTicketByUser(userId: number) {
-  return await Ticket.getByUserId(userId);
+  const ticket = await Ticket.getByUserId(userId);
+  return ticket.getAllTicketData();
 }
 
 export async function updateTicketPayment(userId: number) {
