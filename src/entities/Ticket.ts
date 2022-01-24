@@ -34,15 +34,13 @@ export default class Ticket extends BaseEntity {
   @JoinColumn()
   room: Room;
 
-
   getAllTicketData() {
     return {
       id: this.id,
       isPaid: this.isPaid,
       type: this.type,
-      room: 
-      { 
-        id: this.roomId,
+      room: this.roomId && { 
+        id: this.room.id,
         number: this.room.number,
         bookings: this.room.tickets.length,
         roomType: this.room.roomType.type,
@@ -53,13 +51,16 @@ export default class Ticket extends BaseEntity {
   }
 
   static async getByUserId(userId: number) {
-    return await this.findOne({ relations: ["room"], where: { user: userId } });
+    return await this.findOne({ relations: ["room"], where: { userId } });
   }
+
   static async postTicket(ticket: Ticket) {
-    const existentTicket = await this.getByUserId(ticket.userId);
+    const existentTicket = await this.findOne({ where: { userId: ticket.userId } });
     if(existentTicket) throw new UserAlreadyWithTicket;
+
     const validType = await TypeTicket.findOne( { where: { id: ticket.type } });
     if(!validType) throw new InvalidTicketType;
+
     const ticketCreated = this.create(ticket);
     await this.save(ticketCreated);
   }
