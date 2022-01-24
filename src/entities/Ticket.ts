@@ -1,19 +1,20 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn } from "typeorm";
 import TypeTicket from "./TypeTicket";
-import User from "./User";
 import Room from "./Room";
 import NotFoundError from "@/errors/NotFoundError";
 import RoomNotFound from "@/errors/RoomNotFound";
 import CannotBookBeforePayment from "@/errors/CannotBookBeforePayment";
+import User from "./User";
+import UserAlreadyWithTicket from "@/errors/UserAlreadyWithTicket";
+import InvalidTicketType from "@/errors/InvalidTicketType";
 
 @Entity("tickets")
 export default class Ticket extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => User)
-  @JoinColumn({ name: "userId" })
-  user: User;
+  @Column({ name: "userId" })
+  userId: number;
 
   @ManyToOne(() => TypeTicket, (type) => type.ticket, { eager: true })
   @JoinColumn({ name: "typeId" })
@@ -25,16 +26,29 @@ export default class Ticket extends BaseEntity {
   @Column({ nullable: true })
   roomId: number;
 
+  @OneToOne(() => User)
+  @JoinColumn({ name: "userId" })
+  user: User;
+
   @ManyToOne(() => Room, (room: Room) => room.tickets)
   @JoinColumn()
   room: Room;
 
+  static async postTicket(ticket: Ticket) {
+    const existentTicket = await this.getByUserId(ticket.userId);
+    if(existentTicket) throw new UserAlreadyWithTicket;
+    const validType = await TypeTicket.findOne( { where: { id: ticket.type } });
+    if(!validType) throw new InvalidTicketType;
+    const ticketCreated = this.create(ticket);
+    await this.save(ticketCreated);
+  }
+
   static async getByUserId(userId: number) {
-    return await this.findOne({ where: { user: userId } });
+    return await this.findOne({ where: { userId } });
   }
 
   static async updateTicketPayment(userId: number) {
-    const ticket = await this.findOne({ where: { user: userId } });
+    const ticket = await this.findOne({ where: { userId } });
 
     if(!ticket) throw new NotFoundError;
 
@@ -45,7 +59,7 @@ export default class Ticket extends BaseEntity {
   }
 
   static async updateTicketBooking(userId: number, roomId: number) {
-    const ticket = await this.findOne({ where: { user: userId } });
+    const ticket = await this.findOne({ where: { userId } });
     if(!ticket) throw new NotFoundError;
     if(!ticket.isPaid) throw new CannotBookBeforePayment;
 
@@ -58,4 +72,3 @@ export default class Ticket extends BaseEntity {
     return updatedTicket;
   }
 }
-
