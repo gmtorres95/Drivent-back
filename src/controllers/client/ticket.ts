@@ -3,10 +3,12 @@ import httpStatus from "http-status";
 
 import * as service from "@/services/client/ticket";
 import Ticket from "@/entities/Ticket";
+import InvalidTicketType from "@/errors/InvalidTicketType";
 
 export async function createTicket(req: Request, res: Response) {
   const ticketBody: Ticket = req.body;
   ticketBody.userId = req.user.id;  
+  if(ticketBody.type === undefined) throw new InvalidTicketType;
   await service.postTicket(ticketBody);
   res.sendStatus(httpStatus.CREATED);
 }

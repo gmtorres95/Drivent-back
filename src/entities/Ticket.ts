@@ -5,6 +5,8 @@ import NotFoundError from "@/errors/NotFoundError";
 import RoomNotFound from "@/errors/RoomNotFound";
 import CannotBookBeforePayment from "@/errors/CannotBookBeforePayment";
 import User from "./User";
+import UserAlreadyWithTicket from "@/errors/UserAlreadyWithTicket";
+import InvalidTicketType from "@/errors/InvalidTicketType";
 
 @Entity("tickets")
 export default class Ticket extends BaseEntity {
@@ -33,6 +35,10 @@ export default class Ticket extends BaseEntity {
   room: Room;
 
   static async postTicket(ticket: Ticket) {
+    const existentTicket = await this.getByUserId(ticket.userId);
+    if(existentTicket) throw new UserAlreadyWithTicket;
+    const validType = await TypeTicket.findOne( { where: { id: ticket.type } });
+    if(!validType) throw new InvalidTicketType;
     const ticketCreated = this.create(ticket);
     await this.save(ticketCreated);
   }
@@ -66,4 +72,3 @@ export default class Ticket extends BaseEntity {
     return updatedTicket;
   }
 }
-
