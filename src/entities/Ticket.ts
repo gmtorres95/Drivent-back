@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import TypeTicket from "./TypeTicket";
 import Room from "./Room";
 import NotFoundError from "@/errors/NotFoundError";
@@ -7,6 +7,7 @@ import CannotBookBeforePayment from "@/errors/CannotBookBeforePayment";
 import User from "./User";
 import UserAlreadyWithTicket from "@/errors/UserAlreadyWithTicket";
 import InvalidTicketType from "@/errors/InvalidTicketType";
+import TicketActivity from "./TicketActivity";
 
 @Entity("tickets")
 export default class Ticket extends BaseEntity {
@@ -34,6 +35,8 @@ export default class Ticket extends BaseEntity {
   @JoinColumn()
   room: Room;
 
+  @OneToMany(() => TicketActivity, ticketActivity => ticketActivity.ticket)
+  ticketActivity: TicketActivity
 
   getAllTicketData() {
     return {
@@ -55,6 +58,7 @@ export default class Ticket extends BaseEntity {
   static async getByUserId(userId: number) {
     return await this.findOne({ relations: ["room"], where: { user: userId } });
   }
+
   static async postTicket(ticket: Ticket) {
     const existentTicket = await this.getByUserId(ticket.userId);
     if(existentTicket) throw new UserAlreadyWithTicket;
