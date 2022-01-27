@@ -1,7 +1,7 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, ManyToMany, JoinTable } from "typeorm";
 import ActivityDate from "./ActivityDate";
 import Place from "./Place";
-import TicketActivity from "./TicketActivity";
+import Ticket from "./Ticket";
 
 @Entity("activities")
 export default class Activity extends BaseEntity {
@@ -28,6 +28,17 @@ export default class Activity extends BaseEntity {
     @Column()
     totalOfSeats: number;
 
-    @OneToMany(() => TicketActivity, ticketActivity => ticketActivity.activity)
-    ticketActivity: TicketActivity
+    @ManyToMany(() => Ticket, ticket => ticket.id, { eager: true })
+    @JoinTable({
+      name: "ticketActivities",
+      joinColumn: {
+        name: "activityId",
+        referencedColumnName: "id"
+      },
+      inverseJoinColumn: {
+        name: "ticketId",
+        referencedColumnName: "id"
+      }
+    })
+    ticket: Ticket[]
 }

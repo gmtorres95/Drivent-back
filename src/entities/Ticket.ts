@@ -7,7 +7,6 @@ import CannotBookBeforePayment from "@/errors/CannotBookBeforePayment";
 import User from "./User";
 import UserAlreadyWithTicket from "@/errors/UserAlreadyWithTicket";
 import InvalidTicketType from "@/errors/InvalidTicketType";
-import TicketActivity from "./TicketActivity";
 
 @Entity("tickets")
 export default class Ticket extends BaseEntity {
@@ -34,9 +33,6 @@ export default class Ticket extends BaseEntity {
   @ManyToOne(() => Room, (room: Room) => room.tickets)
   @JoinColumn()
   room: Room;
-
-  @OneToMany(() => TicketActivity, ticketActivity => ticketActivity.ticket)
-  ticketActivity: TicketActivity
 
   getAllTicketData() {
     return {
