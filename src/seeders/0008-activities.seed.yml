@@ -1,0 +1,71 @@
+seeds: 
+  - Activity:
+      id: 1
+      name: "Minecraft: montando o PC ideal"
+      start: "2022-10-22 9:00:00"
+      end: "2022-10-22 10:00:00"
+      totalOfSeats: 30
+      placeId: 1
+      dateId: 1
+
+  - Activity:
+      id: 2
+      name: "LoL: montando o PC ideal"
+      start: "2022-10-22 10:00:00"
+      end: "2022-10-22 11:00:00"
+      totalOfSeats: 20
+      placeId: 1
+      dateId: 1
+
+  - Activity:
+      id: 3
+      name: "Palestra tudo sobre rinocerontes"
+      start: "2022-10-22 09:00:00"
+      end: "2022-10-22 11:00:00"
+      totalOfSeats: 20
+      placeId: 2
+      dateId: 1
+
+  - Activity:
+      id: 4
+      name: "Entendendo Death Stranding"
+      start: "2022-10-22 09:00:00"
+      end: "2022-10-22 10:00:00"
+      totalOfSeats: 20
+      placeId: 3
+      dateId: 1
+
+  - Activity:
+      id: 5
+      name: "Palestra tudo sobre Cavalos"
+      start: "2022-10-22 10:00:00"
+      end: "2022-10-22 11:00:00"
+      totalOfSeats: 20
+      placeId: 3
+      dateId: 1
+  - Activity:
+      id: 6
+      name: "Palestra tudo sobre culinária"
+      start: "2022-10-23 9:00:00"
+      end: "2022-10-23 10:00:00"
+      totalOfSeats: 30
+      placeId: 1
+      dateId: 2
+
+  - Activity:
+      id: 7
+      name: "Palestra as melhores teorias da conspiração"
+      start: "2022-10-23 10:00:00"
+      end: "2022-10-23 11:00:00"
+      totalOfSeats: 20
+      placeId: 2
+      dateId: 2
+
+  - Activity:
+      id: 8
+      name: "Palestra tudo sobre orangotangos"
+      start: "2022-10-24 09:00:00"
+      end: "2022-10-24 11:00:00"
+      totalOfSeats: 20
+      placeId: 3
+      dateId: 3

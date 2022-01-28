@@ -1,3 +1,5 @@
+import EventIsFull from "@/errors/EventIsFull";
+import NotFoundError from "@/errors/NotFoundError";
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, ManyToMany, JoinTable } from "typeorm";
 import ActivityDate from "./ActivityDate";
 import Place from "./Place";
@@ -40,5 +42,15 @@ export default class Activity extends BaseEntity {
         referencedColumnName: "id"
       }
     })
-    ticket: Ticket[]
+    tickets: Ticket[];
+
+    static async subscribe(userId: number, activityId: number) {
+      const activity = await this.findOne( { where: { activityId } });
+      if(!activity) throw new NotFoundError;
+      const seats = (activity.totalOfSeats - activity.tickets.length);
+      if(seats <= 0) throw new EventIsFull;
+      const ticket = await Ticket.findOne( { where: { userId: userId } });
+      activity.tickets.push(ticket);
+      activity.save();
+    }
 }
