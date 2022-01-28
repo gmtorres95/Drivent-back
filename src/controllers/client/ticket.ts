@@ -16,6 +16,11 @@ export async function createTicket(req: Request, res: Response) {
 export async function getTicketByUser(req: Request, res: Response) {
   const userId = req.user.id;
   const ticket = await service.getTicketByUser(userId);
+
+  if(!ticket) {
+    return res.sendStatus(httpStatus.NO_CONTENT);
+  }
+
   res.send(ticket);
 }
 

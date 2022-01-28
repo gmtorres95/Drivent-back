@@ -24,12 +24,25 @@ export default class Hotel extends BaseEntity {
       return bookings.reduce((total, numero) => total + numero);
     }
 
+    function listRoomTypes(rooms: Room[]) {
+      const typeArray = rooms.map((room) => room.roomType.type);
+      const hashtable: Record<string, unknown> = {};
+      return typeArray.filter((type) => {
+        if(hashtable[type] === undefined) {
+          hashtable[type] = true;
+          return true;
+        }
+        return false;
+      });
+    }
+
     return{
       id: this.id,
       image: this.image,
       name: this.name,
       totalOfBeds: this.totalOfBeds,
-      unavailableBeds: calculateUnavailableBeds(this.rooms)
+      unavailableBeds: calculateUnavailableBeds(this.rooms),
+      roomTypes: listRoomTypes(this.rooms)
     };
   }
 
