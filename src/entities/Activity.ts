@@ -45,7 +45,7 @@ export default class Activity extends BaseEntity {
     tickets: Ticket[];
 
     static async subscribe(userId: number, activityId: number) {
-      const activity = await this.findOne( { where: { activityId } });
+      const activity = await this.findOne( { where: { id: activityId } });
       if(!activity) throw new NotFoundError;
       const seats = (activity.totalOfSeats - activity.tickets.length);
       if(seats <= 0) throw new EventIsFull;
