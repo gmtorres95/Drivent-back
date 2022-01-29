@@ -46,12 +46,6 @@ export default class Activity extends BaseEntity {
     })
     tickets: Ticket[];
 
-    static async getActivitiesFromTicket(userId: number) {
-      const ticket = await Ticket.findOne( { where: { userId: userId } });
-      const userActivities = ticket.activities;
-      return userActivities;
-    }
-
     static async subscribe(userId: number, activityId: number) {
       const activity = await this.findOne( { where: { id: activityId } });
       if(!activity) throw new NotFoundError;
