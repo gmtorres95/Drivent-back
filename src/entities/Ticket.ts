@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn, OneToMany, ManyToMany, JoinTable } from "typeorm";
 import TypeTicket from "./TypeTicket";
 import Room from "./Room";
 import NotFoundError from "@/errors/NotFoundError";
@@ -7,6 +7,7 @@ import CannotBookBeforePayment from "@/errors/CannotBookBeforePayment";
 import User from "./User";
 import UserAlreadyWithTicket from "@/errors/UserAlreadyWithTicket";
 import InvalidTicketType from "@/errors/InvalidTicketType";
+import Activity from "./Activity";
 
 @Entity("tickets")
 export default class Ticket extends BaseEntity {
@@ -33,6 +34,20 @@ export default class Ticket extends BaseEntity {
   @ManyToOne(() => Room, (room: Room) => room.tickets)
   @JoinColumn()
   room: Room;
+  
+  @ManyToMany(() => Activity, activity => activity.id, { eager: true })
+  @JoinTable({
+    name: "ticketActivities",
+    joinColumn: {
+      name: "ticketId",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "activityId",
+      referencedColumnName: "id"
+    }
+  })
+  activities: Activity[];
 
   getAllTicketData() {
     return {

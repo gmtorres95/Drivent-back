@@ -69,3 +69,11 @@ seeds:
       totalOfSeats: 20
       placeId: 3
       dateId: 3
+  - Activity:
+      id: 9
+      name: "Palestra tudo sobre carros"
+      start: "2022-10-22 11:00:00"
+      end: "2022-10-22 12:00:00"
+      totalOfSeats: 20
+      placeId: 3
+      dateId: 1

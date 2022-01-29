@@ -10,3 +10,8 @@ export async function subscribe(req: Request, res: Response) {
   res.sendStatus(httpStatus.CREATED);
 }
   
+export async function getActivitiesFromTicket(req: Request, res: Response) {
+  const userId = req.user.id;
+  const tickets = await activityService.getActivitiesFromTicket(userId);
+  res.send(tickets);
+}

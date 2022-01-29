@@ -4,7 +4,9 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColu
 import ActivityDate from "./ActivityDate";
 import Place from "./Place";
 import Ticket from "./Ticket";
-
+import dayjs from "dayjs";
+import "dayjs/locale/pt-br";
+import ConflictInTimeActivity from "@/errors/ConflictInTimeActivity";
 @Entity("activities")
 export default class Activity extends BaseEntity {
     @PrimaryGeneratedColumn()
@@ -30,7 +32,7 @@ export default class Activity extends BaseEntity {
     @Column()
     totalOfSeats: number;
 
-    @ManyToMany(() => Ticket, ticket => ticket.id, { eager: true })
+    @ManyToMany(() => Ticket, ticket => ticket.id)
     @JoinTable({
       name: "ticketActivities",
       joinColumn: {
@@ -44,13 +46,43 @@ export default class Activity extends BaseEntity {
     })
     tickets: Ticket[];
 
+    static async getActivitiesFromTicket(userId: number) {
+      const ticket = await Ticket.findOne( { where: { userId: userId } });
+      const userActivities = ticket.activities;
+      return userActivities;
+    }
+
     static async subscribe(userId: number, activityId: number) {
       const activity = await this.findOne( { where: { id: activityId } });
       if(!activity) throw new NotFoundError;
-      const seats = (activity.totalOfSeats - activity.tickets.length);
+      const seats = (activity.totalOfSeats - activity?.tickets?.length);
       if(seats <= 0) throw new EventIsFull;
       const ticket = await Ticket.findOne( { where: { userId: userId } });
-      activity.tickets.push(ticket);
-      activity.save();
+      const AllActivities = ticket.activities;
+      const userActivities = AllActivities.filter((act) => {
+        if(act.Date.id === activity.Date.id) {
+          return act;
+        }
+      });
+      const validationTime = this.checkTimeValidation(activity.start, userActivities);
+      if(!validationTime) throw new ConflictInTimeActivity;
+      ticket.activities.push(activity);
+      ticket.save();
+    }
+
+    static checkTimeValidation( startTimeActivity: Date, userActivities: Activity[] ) {
+      dayjs().locale("pt-br");
+      const date1 = dayjs(startTimeActivity);
+      const diffs = userActivities.map((activity) => {
+        const date2 = dayjs(activity.end);
+        return date1.diff(date2, "hours");
+      });
+      const validation = diffs.filter( (e) => e < 0);
+      if(validation.length) {
+        return false;
+      }
+      else{
+        return true;
+      }
     }
 }
