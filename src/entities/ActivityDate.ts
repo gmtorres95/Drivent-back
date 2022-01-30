@@ -8,9 +8,13 @@ export default class ActivityDate extends BaseEntity {
     id: number;
 
     @Column({ type: "timestamp" })
-    date: Date
+    date: Date;
 
     @OneToMany(() => Activity, (activity) => activity.Date)
-    activity: Activity
+    activity: Activity;
+
+    static async getActivityDates() {
+      return await this.find();
+    }
 }
 
