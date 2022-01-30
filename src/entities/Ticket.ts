@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn, OneToMany, ManyToMany, JoinTable } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn, ManyToMany, JoinTable } from "typeorm";
 import TypeTicket from "./TypeTicket";
 import Room from "./Room";
 import NotFoundError from "@/errors/NotFoundError";

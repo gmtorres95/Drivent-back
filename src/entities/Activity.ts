@@ -49,13 +49,14 @@ export default class Activity extends BaseEntity {
     static async subscribe(userId: number, activityId: number) {
       const activity = await this.findOne( { where: { id: activityId } });
       if(!activity) throw new NotFoundError;
-      const seats = (activity.totalOfSeats - activity?.tickets?.length);
-      if(seats <= 0) throw new EventIsFull;
       const ticket = await Ticket.findOne( { where: { userId: userId } });
       const AllActivities = ticket.activities;
       const userActivities = AllActivities.filter((act) => act.Date.id === activity.Date.id);
       const validationTime = this.checkTimeValidation(activity.start, userActivities);
       if(!validationTime) throw new ConflictInTimeActivity;
+      if(activity.totalOfSeats <= 0) throw new EventIsFull;
+      activity.totalOfSeats = activity.totalOfSeats - 1;
+      activity.save();
       ticket.activities.push(activity);
       ticket.save();
     }
