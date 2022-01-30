@@ -1,6 +1,8 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import Activity from "./Activity";
 
 @Entity("activitiesDates")
+
 export default class ActivityDate extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -8,7 +10,11 @@ export default class ActivityDate extends BaseEntity {
     @Column({ type: "timestamp" })
     date: Date;
 
-    static async getDates() {
+    @OneToMany(() => Activity, (activity) => activity.Date)
+    activity: Activity;
+
+    static async getActivityDates() {
       return await this.find();
     }
 }
+

@@ -4,6 +4,6 @@ import * as controller from "@/controllers/client/activityDate";
 
 const router = Router();
 
-router.get("/", controller.getDays);
+router.get("/", controller.getActivityDates);
 
 export default router;
