@@ -11,6 +11,8 @@ import CannotBookBeforePayment from "@/errors/CannotBookBeforePayment";
 import RoomNotFound from "@/errors/RoomNotFound";
 import InvalidTicketType from "@/errors/InvalidTicketType";
 import UserAlreadyWithTicket from "@/errors/UserAlreadyWithTicket";
+import EventIsFull from "@/errors/EventIsFull";
+import ConflictInTimeActivity from "@/errors/ConflictInTimeActivity";
 
 /* eslint-disable-next-line */
 export default function errorHandlingMiddleware (err: Error, _req: Request, res: Response, _next: NextFunction) {
@@ -19,6 +21,16 @@ export default function errorHandlingMiddleware (err: Error, _req: Request, res:
   console.error(err);
   if (err instanceof InvalidEmailError) {
     return res.status(httpStatus.BAD_REQUEST).send({
+      message: err.message
+    });
+  }
+  if(err instanceof ConflictInTimeActivity) {
+    return res.status(httpStatus.CONFLICT).send({
+      message: err.message
+    });
+  }
+  if(err instanceof EventIsFull) {
+    return res.status(httpStatus.CONFLICT).send({
       message: err.message
     });
   }
