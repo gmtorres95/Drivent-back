@@ -12,6 +12,6 @@ export async function subscribe(req: Request, res: Response) {
 
 export async function listActivities(req: Request, res: Response) {
   const dateId = + req.params.dateId;
-  const activities = await activityService.listActivities(dateId);
+  const activities = await activityService.listPlaces(dateId);
   res.send(activities);
 }

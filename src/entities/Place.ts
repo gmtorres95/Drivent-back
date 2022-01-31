@@ -16,5 +16,5 @@ export default class Place extends BaseEntity {
   name: string;
 
   @OneToMany(() => Activity, (activity) => activity.place)
-  activities: Activity;
+  activities: Activity[];
 }

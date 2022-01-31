@@ -37,6 +37,9 @@ export default class Activity extends BaseEntity {
   @Column()
   dateId: number;
 
+  @Column()
+  placeId: number;
+
   @ManyToOne(() => ActivityDate, (activitydate) => activitydate.activity, {
     eager: true,
   })
@@ -99,6 +102,29 @@ export default class Activity extends BaseEntity {
   }
 
   static async listActivitiesByDate(dateId: number) {
-    return await this.find({ where: { dateId: dateId } });
+    const activities = await this.find({
+      where: { dateId: dateId },
+      order: { placeId: "ASC" },
+    });
+    const places: Place[] = [];
+    let currentId: number = null;
+
+    activities.map((activity) => {
+      if (activity.placeId !== currentId) {
+        places.push({
+          id: activity.place.id,
+          name: activity.place.name,
+          activities: [],
+        } as Place);
+        currentId = activity.placeId;
+      }
+
+      delete activity.place;
+      delete activity.date;
+
+      places[places.length - 1].activities.push(activity);
+    });
+
+    return places;
   }
 }
