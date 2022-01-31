@@ -64,7 +64,7 @@ export default class Activity extends BaseEntity {
   tickets: Ticket[];
 
   static async subscribe(userId: number, activityId: number) {
-    const activity = await this.findOne({ where: { id: activityId } });
+    const activity = await this.findOne({ where: { id: activityId }, relations: ["tickets"] });
     if (!activity) throw new NotFoundError();
     const ticket = await Ticket.findOne({ where: { userId: userId } });
     const AllActivities = ticket.activities;
@@ -73,38 +73,32 @@ export default class Activity extends BaseEntity {
     );
     const validationTime = this.checkTimeValidation(
       activity.start,
+      activity.end,
       userActivities
     );
     if (!validationTime) throw new ConflictInTimeActivity();
-    if (activity.totalOfSeats <= 0) throw new EventIsFull();
-    activity.totalOfSeats = activity.totalOfSeats - 1;
-    activity.save();
+    if ((activity.totalOfSeats - activity.tickets.length) <= 0) throw new EventIsFull();
     ticket.activities.push(activity);
     ticket.save();
   }
 
-  static checkTimeValidation(
-    startTimeActivity: Date,
-    userActivities: Activity[]
-  ) {
-    dayjs().locale("pt-br");
-    const date1 = dayjs(startTimeActivity);
-    const diffs = userActivities.map((activity) => {
-      const date2 = dayjs(activity.end);
-      return date1.diff(date2, "hours");
-    });
-    const validation = diffs.filter((e) => e < 0);
-    if (validation.length) {
+  static checkTimeValidation(startTimeActivity: Date, endTimeActivity: Date, userActivities: Activity[]) {
+    const start = dayjs(startTimeActivity);
+    const end = dayjs(endTimeActivity);
+    
+    for(let i = 0; i < userActivities.length; i ++) {
+      if(start.diff(userActivities[i].end, "minutes") >= 0 || end.diff(userActivities[i].start, "minutes") <= 0) continue;
       return false;
-    } else {
-      return true;
     }
+
+    return true;
   }
 
   static async listActivitiesByDate(dateId: number) {
     const activities = await this.find({
       where: { dateId: dateId },
-      order: { placeId: "ASC" },
+      order: { placeId: "ASC", start: "ASC" },
+      relations: ["tickets"],
     });
     const places: Place[] = [];
     let currentId: number = null;
@@ -121,6 +115,7 @@ export default class Activity extends BaseEntity {
 
       delete activity.place;
       delete activity.date;
+      activity.totalOfSeats = activity.totalOfSeats - activity.tickets.length;
 
       places[places.length - 1].activities.push(activity);
     });

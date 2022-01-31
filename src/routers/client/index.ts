@@ -19,7 +19,7 @@ router.use("/users", userRouter);
 router.use("/auth", authRouter);
 router.use("/enrollments", tokenValidationMiddleware, enrollmentRouter);
 router.use("/ticket", tokenValidationMiddleware, ticketRouter);
-router.use("/activity", tokenValidationMiddleware, activityRouter);
+router.use("/activities", tokenValidationMiddleware, activityRouter);
 router.use("/rooms", roomRouter);
 router.use("/hotels", hotelRouter);
 router.use("/dates", tokenValidationMiddleware, activityDateRouter);
