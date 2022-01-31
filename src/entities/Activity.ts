@@ -73,6 +73,7 @@ export default class Activity extends BaseEntity {
     );
     const validationTime = this.checkTimeValidation(
       activity.start,
+      activity.end,
       userActivities
     );
     if (!validationTime) throw new ConflictInTimeActivity();
@@ -83,28 +84,22 @@ export default class Activity extends BaseEntity {
     ticket.save();
   }
 
-  static checkTimeValidation(
-    startTimeActivity: Date,
-    userActivities: Activity[]
-  ) {
-    dayjs().locale("pt-br");
-    const date1 = dayjs(startTimeActivity);
-    const diffs = userActivities.map((activity) => {
-      const date2 = dayjs(activity.end);
-      return date1.diff(date2, "hours");
-    });
-    const validation = diffs.filter((e) => e < 0);
-    if (validation.length) {
+  static checkTimeValidation(startTimeActivity: Date, endTimeActivity: Date, userActivities: Activity[]) {
+    const start = dayjs(startTimeActivity);
+    const end = dayjs(endTimeActivity);
+    
+    for(let i = 0; i < userActivities.length; i ++) {
+      if(start.diff(userActivities[i].end, "minutes") >= 0 || end.diff(userActivities[i].start, "minutes") <= 0) continue;
       return false;
-    } else {
-      return true;
     }
+
+    return true;
   }
 
   static async listActivitiesByDate(dateId: number) {
     const activities = await this.find({
       where: { dateId: dateId },
-      order: { placeId: "ASC" },
+      order: { placeId: "ASC", start: "ASC" },
     });
     const places: Place[] = [];
     let currentId: number = null;
