@@ -61,7 +61,7 @@ export default class Ticket extends BaseEntity {
         roomType: this.room.roomType.type,
         hotel: this.room.hotel
       },
-
+      activities: this.activities,
     };
   }
 
