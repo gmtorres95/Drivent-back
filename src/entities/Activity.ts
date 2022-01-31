@@ -64,7 +64,7 @@ export default class Activity extends BaseEntity {
   tickets: Ticket[];
 
   static async subscribe(userId: number, activityId: number) {
-    const activity = await this.findOne({ where: { id: activityId } });
+    const activity = await this.findOne({ where: { id: activityId }, relations: ["tickets"] });
     if (!activity) throw new NotFoundError();
     const ticket = await Ticket.findOne({ where: { userId: userId } });
     const AllActivities = ticket.activities;
@@ -77,9 +77,7 @@ export default class Activity extends BaseEntity {
       userActivities
     );
     if (!validationTime) throw new ConflictInTimeActivity();
-    if (activity.totalOfSeats <= 0) throw new EventIsFull();
-    activity.totalOfSeats = activity.totalOfSeats - 1;
-    activity.save();
+    if ((activity.totalOfSeats - activity.tickets.length) <= 0) throw new EventIsFull();
     ticket.activities.push(activity);
     ticket.save();
   }
@@ -100,6 +98,7 @@ export default class Activity extends BaseEntity {
     const activities = await this.find({
       where: { dateId: dateId },
       order: { placeId: "ASC", start: "ASC" },
+      relations: ["tickets"],
     });
     const places: Place[] = [];
     let currentId: number = null;
@@ -116,6 +115,7 @@ export default class Activity extends BaseEntity {
 
       delete activity.place;
       delete activity.date;
+      activity.totalOfSeats = activity.totalOfSeats - activity.tickets.length;
 
       places[places.length - 1].activities.push(activity);
     });
