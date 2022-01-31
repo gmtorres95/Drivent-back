@@ -1,14 +1,20 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+} from "typeorm";
 import Activity from "./Activity";
 
 @Entity("places")
 export default class Place extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @OneToMany(() => Activity, (activity) => activity.place)
-    activity: Activity
+  @OneToMany(() => Activity, (activity) => activity.place)
+  activities: Activity;
 }

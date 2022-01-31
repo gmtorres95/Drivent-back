@@ -15,7 +15,7 @@ export default class Activity extends BaseEntity {
     @Column()
     name: string;
 
-    @ManyToOne(() => Place, (place) => place.activity, { eager: true })
+    @ManyToOne(() => Place, (place) => place.activities, { eager: true })
     @JoinColumn({ name: "placeId" })
     place: Place;
 

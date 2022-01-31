@@ -9,4 +9,9 @@ export async function subscribe(req: Request, res: Response) {
   await activityService.subscribe(userId, activityId);
   res.sendStatus(httpStatus.CREATED);
 }
-  
+
+export async function listActivities(req: Request, res: Response) {
+  const dateId = + req.params.dateId;
+  const activities = await activityService.listActivities(dateId);
+  res.send(activities);
+}
