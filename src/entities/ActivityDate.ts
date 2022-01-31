@@ -10,7 +10,7 @@ export default class ActivityDate extends BaseEntity {
     @Column({ type: "timestamp" })
     date: Date;
 
-    @OneToMany(() => Activity, (activity) => activity.Date)
+    @OneToMany(() => Activity, (activity) => activity.date)
     activity: Activity;
 
     static async getActivityDates() {
