@@ -13,6 +13,7 @@ import InvalidTicketType from "@/errors/InvalidTicketType";
 import UserAlreadyWithTicket from "@/errors/UserAlreadyWithTicket";
 import EventIsFull from "@/errors/EventIsFull";
 import ConflictInTimeActivity from "@/errors/ConflictInTimeActivity";
+import InvalidBirthDateError from "@/errors/InvalidBirthDate";
 
 /* eslint-disable-next-line */
 export default function errorHandlingMiddleware (err: Error, _req: Request, res: Response, _next: NextFunction) {
@@ -24,21 +25,25 @@ export default function errorHandlingMiddleware (err: Error, _req: Request, res:
       message: err.message
     });
   }
+
   if(err instanceof ConflictInTimeActivity) {
     return res.status(httpStatus.CONFLICT).send({
       message: err.message
     });
   }
+
   if(err instanceof EventIsFull) {
     return res.status(httpStatus.CONFLICT).send({
       message: err.message
     });
   }
+
   if(err instanceof InvalidTicketType) {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message
     });
   }
+
   if(err instanceof UserAlreadyWithTicket) {
     return res.status(httpStatus.CONFLICT).send({
       message: err.message
@@ -88,6 +93,11 @@ export default function errorHandlingMiddleware (err: Error, _req: Request, res:
     });
   }
 
+  if (err instanceof InvalidBirthDateError) {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: err.message
+    });
+  }
   /* eslint-disable-next-line no-console */
   console.error(err);
   res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
