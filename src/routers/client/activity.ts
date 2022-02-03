@@ -6,5 +6,6 @@ const router = Router();
 
 router.get("/:dateId", controller.listActivities);
 router.post("/:id", controller.subscribe);
+router.put("/:id", controller.unsubscribe);
 
 export default router;

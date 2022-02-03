@@ -15,3 +15,10 @@ export async function listActivities(req: Request, res: Response) {
   const activities = await activityService.listPlaces(dateId);
   res.send(activities);
 }
+
+export async function unsubscribe(req: Request, res: Response) {
+  const userId = req.user.id;
+  const activityId  = Number(req.params.id);
+  await activityService.unsubscribe(userId, activityId);
+  res.sendStatus(httpStatus.OK);
+}
