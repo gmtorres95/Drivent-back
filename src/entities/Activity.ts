@@ -122,4 +122,18 @@ export default class Activity extends BaseEntity {
 
     return places;
   }
+
+  static async unsubscribe(userId: number, activityId: number) {
+    const ticket = await Ticket.findOne({ where: { userId } });
+
+    if (!ticket) throw new NotFoundError();
+    
+    const userActivities = ticket.activities;
+    const remainingUserActivities = userActivities.filter((activity) => activity.id !== activityId);
+    
+    if(userActivities.length === remainingUserActivities.length) throw new NotFoundError();
+
+    ticket.activities = remainingUserActivities;
+    ticket.save();
+  }
 }
