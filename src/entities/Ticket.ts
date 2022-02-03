@@ -8,6 +8,7 @@ import User from "./User";
 import UserAlreadyWithTicket from "@/errors/UserAlreadyWithTicket";
 import InvalidTicketType from "@/errors/InvalidTicketType";
 import Activity from "./Activity";
+import Enrollment from "./Enrollment";
 
 @Entity("tickets")
 export default class Ticket extends BaseEntity {
@@ -30,6 +31,10 @@ export default class Ticket extends BaseEntity {
   @OneToOne(() => User)
   @JoinColumn({ name: "userId" })
   user: User;
+
+  @OneToOne(() => Enrollment)
+  @JoinColumn({ name: "userId" })
+  enrollment: Enrollment;
 
   @ManyToOne(() => Room, (room: Room) => room.tickets)
   @JoinColumn()
@@ -54,6 +59,7 @@ export default class Ticket extends BaseEntity {
       id: this.id,
       isPaid: this.isPaid,
       type: this.type,
+      enrollment: this.enrollment,
       room: this.roomId && { 
         id: this.room.id,
         number: this.room.number,
@@ -66,7 +72,7 @@ export default class Ticket extends BaseEntity {
   }
 
   static async getByUserId(userId: number) {
-    return await this.findOne({ relations: ["room"], where: { userId } });
+    return await this.findOne({ relations: ["room", "enrollment"], where: { userId } });
   }
 
   static async postTicket(ticket: Ticket) {
