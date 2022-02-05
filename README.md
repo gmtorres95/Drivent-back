@@ -4,6 +4,8 @@ Back-end for Driven.t, an event management solution.
 ## About
 Driven.t is a web browser application with which you can manage every single aspect of your event.
 
+See the front-end repository [here](https://github.com/gmtorres95/Drivent-front).
+
 ## How to run
 1. Clone this repository
 2. Install all dependencies
