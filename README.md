@@ -1,6 +1,6 @@
 # <img src="https://github.com/gmtorres95/Drivent-front/blob/main/public/favicon.png" height="24px" /> Driven.t (back-end)
 
-Driven.t is a web browser application with which you can manage every single aspect of your event.  
+Driven.t is a web-app that allows you to manage every single aspect of your event.  
 Check the front-end of this application [here](https://github.com/gmtorres95/Drivent-front)  
 Link of the API: https://back-drivent.herokuapp.com/  
 
